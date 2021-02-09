@@ -1,8 +1,19 @@
-## Welcome to GitHub Pages
+## 强制类型转换
 
 You can use the [editor on GitHub](https://github.com/jcqiao/myBlob/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
+  
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+
+### ToString
+
+负责处理非字符串到字符串的强制类型转换。**toString** 是定义在 Object.prototype.toString 上，如果被处理的对象自身定义了toString则会覆盖其原型的toString，所以重写了原型的toString.
+
+基本类型值的字符转换规则：null --> "null" , undefined --> "undefined" , true --> "true" , Number类型遵循通用规则(除了极大或绩效的数字使用指数形式) 
+
+Object.prototype.toString()返回内部属性[[class]]值，如[[object number]].
+![avatar]()
+
+
 
 ### Markdown
 
