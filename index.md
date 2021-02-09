@@ -11,7 +11,7 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 基本类型值的字符转换规则：null --> "null" , undefined --> "undefined" , true --> "true" , Number类型遵循通用规则(除了极大或绩效的数字使用指数形式) 
 
 Object.prototype.toString()返回内部属性[[class]]值，如[[object number]].
-![avatar](https://raw.githubusercontent.com/jcqiao/myBlob/gh-pages/Screen%20Shot%202021-02-09%20at%201.49.28%20PM.png)
+![Aaron Swartz](https://raw.githubusercontent.com/jcqiao/myBlob/gh-pages/Screen%20Shot%202021-02-09%20at%201.49.28%20PM.png)
 
 
 
