@@ -1,9 +1,10 @@
-## 强制类型转换
+## 类型转换
 
 You can use the [editor on GitHub](https://github.com/jcqiao/myBlob/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
   
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
+## 基础部分
 ### ToString
 
 负责处理非字符串到字符串的强制类型转换。**toString** 是定义在 Object.prototype.toString 上，如果被处理的对象自身定义了toString则会覆盖其原型的toString，所以重写了原型的toString.
@@ -15,7 +16,7 @@ Object.prototype.toString()返回内部属性[[class]]值，如[[object number]]
 
 ![avatar](https://github.com/jcqiao/myBlob/raw/gh-pages/code_Class.png)
 
-以上介绍了基本类型的toString，数组的toString经过重新定义，将单元字符串化再用','拼接
+以上介绍了基本类型的toString，`数组的toString经过重新定义`，将单元字符串化再用','拼接
 ```
 let a = [1,2,3]
 a.toString() // "1,2,3"
@@ -56,7 +57,61 @@ JSON.stringify(obj) //"{"name": "a"}"
 ### 总结
 1. string,number,boolean,null的JSON.stringify()规则与toString()相同
 2. 若对象中定义了toJSON()则在字符串化之前调用toJSON()，再进行字符串化
-  
+
+## toNumber
+
+将非数值当做数值使用。true --> 1 false --> 0 undefined --> NaN null --> 0
+toNumber不会将第一个0解析为八进制，遇到非数值就会停止。
+
+对象、数组都会遵循一定规则先转为对应的基本类型值。该规则是先检查对象/数组是否有valueOf()，若有就返回基本类型(可能是Number,String...)；如果没有就找toString()方法，返回基本类型。再跟进基本类型进行数值转换
+```
+a = {valueOf() {return "ab"}} 
+Number(a) //NaN
+```
+1. 首先调用valueOf()将a转为String类型，值是"ab"
+2. 对"ab"进行数值转换 NaN
+
+数组的toString方法上文提到过，`数组重写了toString方法`，返回单元用','连接的字符串
+
+## toBoolean
+
+假值：
+'' , false, +-0, undefined, null, NaN
+真值
+除假值以外
+
+## 强制类型转换
+### 字符串与数字
+- 由String()和Number()两个内建函数实现的，不带new关键字，所以不创建包装对象。
+- string遵循toString Number遵循toNumber。
+- Object.prototype.toString()也可以显示实现转为字符串。
+```
+  var a = 123
+  a.toString()
+```
+  a是个基本类型 所有js引擎自动为a创建了封装对象，然后该对象调用toString()方法
+- +一元加也可以实现将字符串转为数字
+  在js开源社区中 一元运算符'+'被认为是显示强制类型转换
+  ```
+  var a = +"123" //123
+  ```
+  使用场景：
+  日期转为时间戳
+  ```
+  var d = +new Date() 
+  var d = Date.now() //es5 实现的机制也是+ 
+  ```
+  推荐使用Date.now()获取当前时间戳 使用new Date(d).getTime()获取指定日期的时间戳
+* 奇怪的~运算符
+  ~非 ~x 大致等同于 -(x+1) x=-1是一个“哨位值”，在js indexOf()方法中体现
+  - 通常我们判断是否有指定值时if(a.indexOf("b") === -1)未找到，可以用if(~a.indexOf("b"))
+  - 字位截除
+    ~~ 相当于Math.floor 但在负数时不一样
+    ```
+    Math.floor(-49.6) // -50
+    ~~-49.6 //-49
+    ```
+
 ### Markdown
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
