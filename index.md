@@ -111,7 +111,27 @@ Number(a) //NaN
     Math.floor(-49.6) // -50
     ~~-49.6 //-49
     ```
-
+    
+## 显示解析数字字符串
+  解析字符串中的数字 vs 强制类型转换
+  首先 两者是有区别的：
+  ```
+  var a = "42"
+  var b = "42ab"
+  Number(a) === parseInt(a) //true 42
+  Number(b) //NaN
+  parseInt(b) //42
+  ```
+  他们的区别在于 解析允许字符串中包含非数字(第一项非字母)，解析直到遇到非数字停止。转换不允许有非数字的出现，否则返回NaN。
+  parseInt针对的是字符串解析，若传递非字符串首先隐式转换为字符串，然后在进行解析。第二个参数指定基数，也就是按照几进制来进行转换
+  
+  ###解析非字符串
+  parseInt的一个坑
+  ```
+  parseInt(1/0,19) //18
+  ```
+  1/0 --> Infinite / ∞，显然在js中选择了Infinite 但返回18未免也太匪夷所思了，是因为parseInt将Infinite转为字符串"Infinite"，然后在将字符串"Infinite"按照19进制进行解析I是18，n大于18所以解析停止。
+  parseInt解析非字符串，若定义了toString()方法则调用定义的toString()方法。
 ### Markdown
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
