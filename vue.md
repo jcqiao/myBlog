@@ -12,3 +12,18 @@
     * 为什么要这么做？因为使用js api调用原生dom时会有相当大的损耗，js运行很快，但dom运行很慢，当你用原生dom api的时候，浏览器在js引擎环境下操作dom，当操作的dom多了，这个过程有损耗(经常渲染视图)。而用声明式渲染，是将dom放在render函数中去生成虚拟dom，render函数调用完会将整个虚拟dom挂到真正的dom上，而不用执行一次dom操作就挂在真正的dom上(命令式渲染)。
     
     ![avatar](https://raw.githubusercontent.com/jcqiao/myBlog/gh-pages/images/declareRender2.png)
+    
+    * 继续说说当状态改变render函数如何重新渲染视图
+    
+      首先什么是render函数:比如左侧的模板，经过vue编译如上图(compile)后变成右侧render函数
+      
+      ![avatar](https://raw.githubusercontent.com/jcqiao/myBlog/gh-pages/images/renderFn.png)
+      
+      当编译模板成render函数：
+      1. 模板用到的属性会调用getter函数，并将属性保存在watch中
+      2. render函数完成后patch函数将虚拟dom挂在真正的dom中，每个属性都会被保存起来
+      3. 属性被修改时调用setter函数，通知数据对象数据发生改变
+      4. 通知含有该属性的组件，需要重新渲染
+      5. 对应组件再次调用render函数生成虚拟dom树 挂到真正的dom上
+      
+      ![avatar](https://raw.githubusercontent.com/jcqiao/myBlog/gh-pages/images/traceSystem.jpg)
