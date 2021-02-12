@@ -27,3 +27,36 @@
       5. 对应组件再次调用render函数生成虚拟dom树 挂到真正的dom上
       
       ![avatar](https://raw.githubusercontent.com/jcqiao/myBlog/gh-pages/images/traceSystem.jpg)
+      
+  - 组件系统
+    
+    就是UI --> Components的映射
+    
+    ![avatar](https://raw.githubusercontent.com/jcqiao/myBlog/gh-pages/images/UIComponent.png)
+    
+    * 父子间的通信
+      父--》子 props 子--》父 $emit
+    * vue组件引入“构建工具”后有一个**单文件组件**概念
+      单文件组件与web component的本质区别在于单文件组件基于构建工具生成。这样的好处是有了一个构建的机会，可以对这些单文件组件做更多的分析，在每一个语言块里可以单独使用不同的处理器，这点后面还会讲到。
+ 
+### 客户端路由
+
+  本质：url --> component映射
+    当一个页面有多个状态时，显然不能只刷新一次页面就将所有状态显示给用户。而是将多个状态放在不同路径下供用户访问。
+    
+    ![avatar](https://raw.githubusercontent.com/jcqiao/myBlog/gh-pages/images/router.png)
+    若要自己实现一个这样的路由，看上去倒是很简单，用hash去模拟一下，就可以自己很快地做出很简单的路由。但事实上，客户端路由涉及很多更复杂的问题，如下表所示。
+    
+    | 嵌套路由 | 重定向/别名 | 
+    | 具名路由 | 跳转动画 |
+    | 多个平级路由出口 | 异步数据处理 |
+    | 复杂匹配规则 | 跳转规则限制 |
+    | 当前活跃链接 | 滚动条行为 |
+    | | 懒加载 |
+    
+    可能同一层的路由有多个不同的出口，还有着复杂的URL匹配规则，等等。可以借助vue-router实现
+    配合Webpack还可以实现基于路由的懒加载，一条路径所对应的组件在打包的时候，会分离成另外一块，只有当该路由被访问的时候，才会被加载出来。
+    
+
+
+    
