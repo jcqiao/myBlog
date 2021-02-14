@@ -19,7 +19,7 @@
       
       ![avatar](https://raw.githubusercontent.com/jcqiao/myBlog/gh-pages/images/renderFn.png)
       
-      当编译模板成render函数：
+      当编译模板成render函数：**vue响应式系统**
       1. 模板用到的属性会调用getter函数，并将属性保存在watch中
       2. render函数完成后patch函数将虚拟dom挂在真正的dom中，每个属性都会被保存起来
       3. 属性被修改时调用setter函数，通知数据对象数据发生改变
