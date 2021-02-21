@@ -1,5 +1,22 @@
 # vue实例挂载
 
+## 总结
+
+- new vue过程中将实例挂载发生在Vue.prototype.$mount
+
+1. 将el转为dom对象
+
+  - el是dom对象 直接返回
+  - el是String且第一个字符为'#',使用querySelector找到该dom返回；未找到就返回div dom
+
+2. el不能是html/body会被覆盖导致html格式错误
+3. if(render)
+   1. y 调用未修改的原型mount 在mount中将el挂到真正的dom上
+   2. n template? y charAt(0) === '#' 调用idToTemplate函数将ID为'app'的dom对象返回给template; dom? innerhtml返回给template. n 将el整个dom给template； 编译成render函数。再去挂载。
+
+  挂载的过程
+  实际上在new Watcher中实现 又称渲染watcher
+
 ## runtime + Compiler
 
 - 入口：/src/platforms/web/entry-runtime-with-compiler.js
@@ -64,9 +81,9 @@ export function query (el: string | Element): Element {
   - template最终是个字符串
   - 开始编译成render函数
   - return mount.call(this, el, hydrating)这个mount是一开始缓存的mount
-  
+
 ``` javascript
-  
+
   const options = this.$options
   // resolve template/el and convert to render function
   if (!options.render) {
@@ -121,7 +138,7 @@ Vue.prototype.$mount = function (
 - 接下来看看mountComponent中发生了什么
   - 将el缓存
   - 若无render函数：有template且第一个字符不是'#' 或者 有el会报错：runtime-only无编译功能，无法将template/el编译成render函数
-  
+
 ``` javascript
   export function mountComponent (
   vm: Component,
@@ -219,6 +236,3 @@ constructor (
         traverse(value)
       }
 ```
-
-
-
