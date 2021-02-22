@@ -11,6 +11,8 @@
 
 **01pic**
 
+![avatar](https://raw.githubusercontent.com/jcqiao/myBlog/gh-pages/vue_src/imgs/01.png)
+
 - 可以看出dom是非常庞大的，所以原生js/jquery操作dom是会影响性能的
 - 而virtual dom是原生js用来 **描述** dom的，注意是 **描述** 只需要使用需要的属性即可。所以要比 **创建** 一个dom代价要少的多
 - 在vue中virtual dom是定义了一个vnode类实现的
