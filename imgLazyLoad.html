@@ -1,0 +1,60 @@
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>基于原生 js 实现图片懒加载</title>
+      <style>
+          img {
+              display: block;
+              width: 100%;
+              height: 300px;
+              margin-bottom: 20px;
+          }
+      </style>
+  </head>
+  <body>
+      <img data-src="./images/01.jpg" alt="">
+      <img data-src="./images/02.jpg" alt="">
+      <img data-src="./images/03.jpg" alt="">
+      <img data-src="./images/04.jpg" alt="">
+      <img data-src="./images/05.jpg" alt="">
+      <img data-src="./images/06.jpg" alt="">
+      <img data-src="./images/07.jpg" alt="">
+      <img data-src="./images/08.jpg" alt="">
+
+  </body>
+  <script>
+      var imgs = document.querySelectorAll('img');
+
+      //用来判断bound.top<=clientHeight的函数，返回一个bool值
+      function isIn(el) {
+          var bound = el.getBoundingClientRect();// 到视口的高度
+          console.log('-',bound);
+          var clientHeight = window.innerHeight; //document.documentElement.clientHeight 两种写法 兼容
+          console.log('+',clientHeight);
+          return bound.top <= clientHeight;//判断是否进入视野
+      } 
+      //检查图片是否在可视区内，如果在，则加载
+      function check() {
+          Array.from(imgs).forEach(function(el){
+              if(isIn(el)){
+                  loadImg(el);
+              }
+          })
+      }
+      function loadImg(el) {
+          if(!el.src){
+              var source = el.dataset.src;
+              el.src = source;
+          }
+      }
+      window.onload = window.onscroll = function () { //onscroll()在滚动条滚动的时候触发
+          check();
+      }
+  </script>
+</html>
+
+
