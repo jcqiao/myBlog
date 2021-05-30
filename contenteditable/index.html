@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .input {
+      border: 1px solid #000;
+      /* 因为光标需要宽度而inline是没有宽度的 所以要设置inline-block */
+      display: inline-block;
+      min-width: 1px;
+      padding: 5px;
+    }
+
+    [contenteditable="true"] {
+      caret-color: #000;
+    }
+
+    .input:empty::after {
+      content: attr(placeholder);
+      color: lightgray;
+    }
+  </style>
+</head>
+
+<body>
+  <h4>场景</h4>
+  <p>除了input/textarea元素可以编辑，宽度自适应</p>
+  <span contenteditable="true" class="input" placeholder="please enter value"></span>
+  <span>123</span>
+</body>
+
+</html>
