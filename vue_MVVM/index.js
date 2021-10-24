@@ -3,7 +3,6 @@ function Vue(options = {}) {
     let data = this._data = this.$options.data
     let _this = this
     this._data = observe(data)
-    // 代理
     const p = new Proxy(_this, {
         get(target, key) {
             if (key[0] === '_') {
@@ -68,6 +67,17 @@ function Compiler(el, vm) {
                 })
                 node.textContent = text.replace(reg, val)
             }
+            if (node.nodeType === 1 && node.getAttribute('v-model')) {
+                node.setAttribute('value', vm._data[RegExp.$1])
+                // 订阅
+                new Watcher(vm, RegExp.$1, function (newVal) {
+                    node.setAttribute('value', newVal) 
+                })
+                node.addEventListener('input', (e) => {
+                    console.log('1');
+                    vm._data[RegExp.$1] = e.target.value
+                })
+            }
             if (node.childNodes) {
                 replace(node)
             }
@@ -81,7 +91,6 @@ function Dep() {
 }
 
 Dep.prototype.add = function (fn) {
-    console.log('-fn',fn);
     this.subs.push(fn)
 }
 
