@@ -21,3 +21,6 @@
     - 02-挂载时做了哪些事
     - 03-render函数做了什么
     - 04-如何生成虚拟dom
+
+## vue_mvvm
+  - 使用proxy实现mvvm
