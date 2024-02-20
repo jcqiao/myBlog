@@ -1,0 +1,131 @@
+import React, { useState, useEffect } from "react";
+import { Box, TextField, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import moment from "moment";
+import { makeStyles } from "@material-ui/core/styles";
+
+const ROOT_API = process.env.REACT_APP_API;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& input": {
+      padding: "0px !important",
+    },
+  },
+}));
+
+function DateContainder({
+  data,
+  regx,
+  filterParams,
+  item,
+  type,
+  changeType,
+  id,
+  name,
+  filtersData,
+}) {
+  const { usersoeid } = useSelector(selectAuth);
+  const classes = useStyles();
+  const [isEditing, setIsEditing] = useState(false);
+  const [value, setValue] = useState(data || "");
+  const [errorState, setErrorState] = useState({ error: false, message: "" });
+
+  const handleDoubleclick = () => {
+    setIsEditing(true);
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    const isValid = regx.test(value);
+    setErrorState({ error: !isValid, message: isValid ? "" : "Invalid date" });
+    setValue(value);
+  };
+
+  const saveSubmit = async (id, filters) => {
+    try {
+      const response = await axios.put(`${ROOT_API}/filter/${id}`, {
+        dataJson: JSON.stringify(filters),
+        name,
+        soeid: usersoeid || "cj22693",
+        id,
+      });
+      if (response.data.code === 200) {
+        const updatedFiltersData = filtersData.map((item) =>
+          item.id === id ? { ...item, dataJson: response.data.dataJson } : item
+        );
+        setFiltersData(updatedFiltersData);
+      }
+    } catch (error) {
+      setErrorState({ error: true, message: "Error saving data" });
+    }
+  };
+
+  const handleBlur = () => {
+    if (errorState.error) return;
+
+    const { year, month, day } = filterParams[item][type].split("/");
+    const newDate = `${year}/${month}/${day}`;
+    const filters = { ...filterParams, [item]: { ...filterParams[item], [type]: newDate } };
+
+    const validateDates = (dates) => {
+      const start = dates.dateStart ? moment(dates.dateStart, "YYYY/MM/DD") : null;
+      const end = dates.dateEnd ? moment(dates.dateEnd, "YYYY/MM/DD") : null;
+
+      if (start && !start.isValid() || end && !end.isValid()) {
+        setErrorState({ error: true, message: "Invalid date, start year must be less than end year" });
+        return false;
+      }
+
+      if (start && end && start.isAfter(end)) {
+        setErrorState({ error: true, message: "Invalid date, start date must be less than end date" });
+        return false;
+      }
+
+      return true;
+    };
+
+    for (const key in filters) {
+      if (["onBoardDate", "resignDate", "lastPrdate", "convertDate"].includes(key)) {
+        if (!validateDates(filters[key])) {
+          return;
+        }
+      }
+    }
+
+    if (!errorState.error) {
+      setIsEditing(false);
+      saveSubmit(id, filters);
+    }
+  };
+
+  return (
+    <Box>
+      {isEditing ? (
+        <TextField
+          className={classes.root}
+          variant="standard"
+          defaultValue={value}
+          onChange={handleChange}
+          error={errorState.error}
+          onBlur={handleBlur}
+          helperText={errorState.error && errorState.message}
+          autoFocus
+          InputProps={{
+            style: {
+              cursor: "pointer",
+              width: 125,
+            },
+          }}
+        />
+      ) : (
+        <Typography onDoubleClick={handleDoubleclick}>
+          {value}
+        </Typography>
+      )}
+    </Box>
+  );
+}
+
+export default DateContainder;
